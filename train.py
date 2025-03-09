@@ -57,7 +57,7 @@ output_model = 'models/output'
 if os.path.isdir(output_model):
     shutil.rmtree(output_model) # Remove the previous model to create a new one
 
-## Helper function to sparce the row
+## Helper function to parse the row
 def parcing(row):
     L = row.split(",")
     if L[2] == '':
