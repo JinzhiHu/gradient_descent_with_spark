@@ -1,0 +1,167 @@
+\documentclass[9pt,handout]{beamer}
+\usepackage{graphicx} % Required for inserting images
+\usepackage{amsmath,amssymb}
+\usepackage{blkarray}
+\usepackage{bbm}
+\usepackage{optidef}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage{tikz}
+% \usepackage{hyperref}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{svg}
+
+% Theme choice:
+% \usetheme{AnnArbor}
+% \usetheme{CambridgeUS}
+% \usetheme{Singapore}
+\usetheme{Antibes}
+
+% \usecolortheme{crane}
+% \usecolortheme{wolverine}
+\usecolortheme{albatross}
+
+\title{Gradient Descent: How and Why}
+\usepackage{appendixnumberbeamer}
+
+% \usepackage[backend=bibtex,citestyle=authoryear-icomp,natbib,maxcitenames=1]{biblatex}
+% \addbibresource{bibfile.bib}
+
+\begin{document}
+
+% Title page, navigation surpressed, no page number
+{
+\beamertemplatenavigationsymbolsempty
+\begin{frame}[plain]
+\titlepage
+\end{frame}
+}
+
+% TOC, navigation surpressed, no page number
+
+\begin{frame}{Outline} 
+\tableofcontents 
+\end{frame} 
+
+%% How?
+\addtocounter{framenumber}{-2}
+\section{How?}
+
+%% 1
+\begin{frame}{Gradient Descent: Definition}
+
+First, the definition:
+
+\begin{block}{Topic: Gradient Descent}
+	 For function $f(\cdot)$, $x_c\in\text{Range}(f)$, and some learning rate $r>0$, in practice, we can find a point $x_{new}$
+	$$x_{new}=x_c-r\nabla f(x_c),$$
+	such that $f(x_{new})<f(x_c)$, where $\nabla f(x_c)$ is the gradient of $f(\cdot)$ at $x_c$.
+\end{block}
+
+We are now presenting a gentle introduction to the Gradient Descent Method in the following slides.
+
+\end{frame}
+
+%% Why?
+%% Preliminary: Descent direction
+\addtocounter{framenumber}{-2}
+\section{Why?}
+\subsection{Preliminary: Descent direction}
+
+%% 2
+\begin{frame}{Preliminary: Descent direction }
+
+\noindent \textbf{1. Definition}: If $f(x_c+\alpha d)<f(x_c)$, $\forall 0<\alpha < \bar\alpha$ given $\bar\alpha>0$, then $d$ is the descent direction.
+
+\noindent \textbf{2. Derived lemma}: For gradient descent under the descent direction $d$, $\langle d, \nabla f(x_c)\rangle<0$ and learning rate $r$, we have the equation
+
+$$x_{new} = x_c + r d.$$
+
+Here we present a heuristic \textit{proof}:
+
+Intuitively, from first order Taylor, for $0<r < \bar\alpha$,
+$$f(x_c+r d) \le f(x_c) + \nabla f(x_c)^T(r d),$$
+if $\langle d, \nabla f(x_c)\rangle<0$, we immediately have
+$$f(x_c+\alpha d) \le f(x_c)+(<0)<f(x_c).$$
+
+\end{frame}
+
+%% Why Gradient Descent?
+\subsection{Why Gradient Descent?}
+
+%% 3
+\begin{frame}{Why Gradient Descent?}
+
+\noindent \textbf{3. How do we find the best descent direction?} By Lagrange Multiplier (KKT, Karush–Kuhn–Tucker)
+
+We optimize the following program to find the optimal (normalized) descent direction that maximally decreases the value of the function for $x_{new}= x_c + rd$.
+
+First, given the First-order Taylor, we have
+$$\phi(r)=f(x_c+rd)=f(x_c)+r\nabla f(x_c)^T d+o(|r|),$$
+the problem is hence reduced to finding the $d$ such that $\nabla f(x_c)^T d$ is minimal.
+
+Or formally,
+
+\begin{mini*}|s|
+    {}{\nabla f(x_c)^Td}{}{}
+    \addConstraint{|| d||=1}
+\end{mini*}
+
+\end{frame}
+
+%% 4
+\begin{frame}{Why Gradient Descent?}
+
+Equivalently, the program from the last slide can be written as
+
+\begin{mini*}|s|
+    {}{\nabla f(x_c)^Td}{}{}
+    \addConstraint{d^Td=1}
+\end{mini*}
+
+According to KKT, we can write its dual as
+$$\min \max L(d,\lambda)=\nabla f(x_c)^Td+\lambda(d^Td-1),s.t.\lambda\ge 0$$
+and the gradient of the Lagrangian
+$$\nabla_d L(d,\lambda)=\nabla f(x_c) + 2\lambda d=0,$$
+$$\nabla_\lambda L(d,\theta)=d^Td-1=0.$$
+
+If the program has an optimal solution, from $\nabla_d$, we get $d = -\frac 1{2\lambda} \nabla f(x_c)$, and $d^Td=1$ by $\nabla_\lambda$. Also, 
+$$d = -\frac{\nabla f(x_c)}{||\nabla f(x_c)||}, \quad \lambda  = \frac {||\nabla f(x_c)||}2.$$
+
+Hence the negative gradient is the optimal descent direction.
+
+\end{frame}
+
+%% Further Discussions
+\section{Further Discussions}
+
+%% 5
+\begin{frame}{Further Discussions}
+
+\begin{itemize}
+\item Gauss-Newton Method
+
+As we discussed before, the Gradient Descent only takes care of the first-order term in Taylor expansion, if we add the second term into the Taylor expansion, we now have
+$$\phi(r)=f(x_c+rd)=f(x_c)+r\nabla f(x_c)^T d+\frac 12 r^2d^THessian (f(x_c))d+o(r^2).$$
+
+Gauss-Newton deals with this case, in which we ignore the first-order term. 
+
+\item Learning Rate Selection and Update
+
+For simple functions $f(\cdot)$, we can plug $x_c+rd$ into the function $f(\cdot)$ and calculate the optimal $r$  given the known vector $d=\nabla f(x_c)$ and fixed $x_c$; in practice, we can also find a suitable root by linear searching the minimum $x_c+rd$ given a vector for selected discretized values $r\in(0,1)$.
+
+To validify such selection, we can use Wolfe Condition.
+\end{itemize}
+
+
+
+\end{frame}
+
+% % References
+% \appendix
+% \begin{frame}[allowframebreaks]
+%        \frametitle{References}
+%        \printbibliography
+% \end{frame}
+\end{document}
