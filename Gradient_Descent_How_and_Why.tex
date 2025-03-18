@@ -54,7 +54,7 @@
 First, the definition:
 
 \begin{block}{Topic: Gradient Descent}
-	 For function $f(\cdot)$, $x_c\in\text{Range}(f)$, and some learning rate $r>0$, in practice, we can find a point $x_{new}$
+	 For function $f(\cdot)$, $x_c\in\text{Domain}(f)$, and some learning rate $r>0$, in practice, we can find a point $x_{new}$
 	$$x_{new}=x_c-r\nabla f(x_c),$$
 	such that $f(x_{new})<f(x_c)$, where $\nabla f(x_c)$ is the gradient of $f(\cdot)$ at $x_c$.
 \end{block}
@@ -78,12 +78,10 @@ We are now presenting a gentle introduction to the Gradient Descent Method in th
 
 $$x_{new} = x_c + r d.$$
 
-Here we present a heuristic \textit{proof}:
-
 Intuitively, from first order Taylor, for $0<r < \bar\alpha$,
 $$f(x_c+r d) \le f(x_c) + \nabla f(x_c)^T(r d),$$
 if $\langle d, \nabla f(x_c)\rangle<0$, we immediately have
-$$f(x_c+\alpha d) \le f(x_c)+(<0)<f(x_c).$$
+$$f(x_{new}) \le f(x_c)+(<0)<f(x_c).$$
 
 \end{frame}
 
