@@ -119,7 +119,7 @@ Equivalently, the program from the last slide can be written as
 \end{mini*}
 
 According to KKT, we can write its dual as
-$$\min \max L(d,\lambda)=\nabla f(x_c)^Td+\lambda(d^Td-1),s.t.\lambda\ge 0$$
+$$\max_{\lambda} \min_{x} L(d,\lambda)=\nabla f(x_c)^Td+\lambda(d^Td-1),s.t.\lambda\ge 0$$
 and the gradient of the Lagrangian
 $$\nabla_d L(d,\lambda)=\nabla f(x_c) + 2\lambda d=0,$$
 $$\nabla_\lambda L(d,\theta)=d^Td-1=0.$$
